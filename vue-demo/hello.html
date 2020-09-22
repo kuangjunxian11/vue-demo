@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<title>Title</title>
+</head>
+<body>
+<div id="app">
+    <ul>
+        <li v-for="(user,index) in users">{{index+1}}.{{user.name}}-{{user.gender}}-{{user.age}}</li>
+    </ul>
+    <input type="text" v-model="num">
+    <input type="button" value="加一" v-on:click="inc">
+    <h1>大家好我是{{name}},我有很多的妹子喜欢我{{num}}</h1>
+</div>
+</body>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+    const app=new Vue({
+        el:"#app",
+        data:{
+            name:"彭于晏",
+            num:100,
+            users:[
+                {name:'胡歌',gender:"男",age:30},
+                {name:'彭于晏',gender:"男",age:29}
+            ]
+        },
+        methods:{
+            inc(){
+                this.num++;
+            }
+        }
+    })
+</script>
+</html>
