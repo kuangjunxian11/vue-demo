@@ -6,15 +6,10 @@
 </head>
 <body>
 <div id="app">
-    <ol>
-        <ul v-for="(user,index) in users">{{user.name}}</ul>
-    </ol>
-    <ul>
-        <li></li>
-    </ul>
     <ul>
         <li v-for="(user,index) in users">{{index+1}}.{{user.name}}-{{user.gender}}-{{user.age}}</li>
     </ul>
+    <!--双向绑定-->
     <input type="text" v-model="num">
     <input type="button" value="加一" v-on:click="inc">
     <h1>大家好我是{{name}},我有很多的妹子喜欢我{{num}}</h1>
