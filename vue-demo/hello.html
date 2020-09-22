@@ -7,7 +7,7 @@
 <body>
 <div id="app">
     <ol>
-        <ul></ul>
+        <ul v-for="(user,index) in users">{{user.name}}</ul>
     </ol>
     <ul>
         <li v-for="(user,index) in users">{{index+1}}.{{user.name}}-{{user.gender}}-{{user.age}}</li>
