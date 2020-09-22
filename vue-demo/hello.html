@@ -10,6 +10,9 @@
         <ul v-for="(user,index) in users">{{user.name}}</ul>
     </ol>
     <ul>
+        <li></li>
+    </ul>
+    <ul>
         <li v-for="(user,index) in users">{{index+1}}.{{user.name}}-{{user.gender}}-{{user.age}}</li>
     </ul>
     <input type="text" v-model="num">
