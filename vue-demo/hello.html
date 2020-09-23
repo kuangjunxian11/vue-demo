@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="UTF-8">
 <title>Title</title>
@@ -9,10 +9,76 @@
     <ul>
         <li v-for="(user,index) in users">{{index+1}}.{{user.name}}-{{user.gender}}-{{user.age}}</li>
     </ul>
+
     <!--双向绑定-->
     <input type="text" v-model="num">
     <input type="button" value="加一" v-on:click="inc">
     <h1>大家好我是{{name}},我有很多的妹子喜欢我{{num}}</h1>
+
+    <!--声明式渲染，单向渲染，这个会先显示出胡歌，然后再渲染出彭于晏,
+    如果在data中的name是一行这样的代码<span style='color: red;'>彭于晏</span>，
+    前者会渲染出红色，后者会直接显示代码-->
+    <h1>大家好，我是<span v-html="name">胡歌</span>,有{{num}}妹子迷恋我！</h1>
+    <h1>大家好，我是<span v-text="name">张国荣</span>,有{{num}}妹子迷恋我！</h1>
+
+    <!--双向绑定,value属性是用来向后台提交代码的-->
+    <input type="checkbox" v-model="language" value="彭于晏">java<br>
+    <input type="checkbox" v-model="language" value="C++">C++<br>
+    <input type="checkbox" v-model="language" value="python">python<br>
+    <span>您选择了：{{language.join(",")}}</span>
+
+    <!--绑定事件元素-->
+    <input type="button" @click="inc"value="加一">{{num}}
+
+    <!--事件修饰符-->
+    <!--右击事件，并阻止默认事件发生-->
+    <button @contextmenu.prevent=num++>加一</button>
+    <!--右击事件，不阻止默认事件发生-->
+    <button @contextmenu=num++>加一</button>
+
+    <!--组合按键-->
+    <input type="text" value="点我打印" @keyup.enter="print">
+
+    <hr>
+
+    <!--遍历数据,将数组中的对象遍历出来之后放到一个对象中,注意这个index索引是不能放到user的前面不然读取不到数据-->
+    <ul>
+        <!--这是个错误写法，会读取这样一段：NaN.{ "name": "胡歌", "gender": "男", "age": 30 }-0--->
+        <li v-for="(user,index) in users" :index="index">{{index+1}}.{{user.name}}-{{user.gender}}-{{user.age}}</li>
+    </ul>
+    <ul>
+        <!--这个地方注意下，key和value渲染出来放的地方不一样-->
+        <li v-for="(key,val,index) in user" :index="index">{{index+1}}}-{{val}}-{{key}}</li>
+    </ul>
+
+    <hr>
+
+    <!--v-if,v-show的使用-->
+    <button @click="show=!show">点我呀</button>
+    <h2 v-if="show">看得到我了！！</h2>
+    <h2 v-show="show">看得到我了！！show</h2>
+    <!--配合v-for使用-->
+    <hr>
+    <ul>
+        <li v-for="(user,index) in users" v-if="user.gender=='男'">{{index+1}}-{{user.gender}}-{{user.name}}-{{user.age}}</li>
+    </ul>
+    <!--else if,else的使用-->
+    <button @click="random=Math.random()">点我呀！</button>
+    <h2 v-if="random>0.75">if</h2>
+    <h2 v-else-if="random>0.45">else-if</h2>
+    <h2 v-else>else</h2>
+
+    <hr>
+
+    <!--v-bind的使用-->
+    <!--可以是数据模型，可以是具有返回值的js代码块或者函数-->
+    <div v-bind:title="title" style="border:1px solid red;width: 50px;height: 50px;"></div>
+
+    <!--watch的使用-->
+    <input type="text" v-model="message">
+
+    <!--计算属性-->
+    <h2>当前日期为：{{birth}}</h2>
 </div>
 </body>
 <script src="node_modules/vue/dist/vue.js"></script>
@@ -21,15 +87,43 @@
         el:"#app",
         data:{
             name:"彭于晏",
-            num:100,
+            num:10,
             users:[
                 {name:'胡歌',gender:"男",age:30},
+                {name:'柳岩',gender:"女",age:28},
                 {name:'彭于晏',gender:"男",age:29}
-            ]
+            ],
+            user:{name:'刘亦菲',gender:'女',age:29},
+            language:[],
+            show:true,
+            random:0,
+            message:'',
+            title:"",
+                birthday:1602788946642
         },
         methods:{
             inc(){
                 this.num++;
+                console.log(this);
+                console.log(Date.now());//返回当前毫秒值
+            },
+            print(){
+                console.log("您点击了，确认！！！");
+            }
+        },
+        created() {
+            //这个num会覆盖data中的data的值
+            this.num=1000;
+        },
+        watch:{
+            message(newVal,oldVal){
+                console.log(newVal,oldVal);
+            }
+        },
+        computed:{
+            birth(){//计算属性必须有返回值
+                const d = new Date(this.birthday);
+                return d.getFullYear() + "-" + d.getMonth() + "-" + d.getDay();
             }
         }
     })
