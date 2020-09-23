@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <title>Title</title>
 </head>
+<style>
+    .active{
+        color: red;
+    }
+</style>
 <body>
 <div id="app">
     <ul>
@@ -70,19 +75,51 @@
 
     <hr>
 
-    <!--v-bind的使用-->
+    <!--v-bind的使用,使用了bind之后说明title是一个动态值,这里的value是一个动态值-->
     <!--可以是数据模型，可以是具有返回值的js代码块或者函数-->
-    <div v-bind:title="title" style="border:1px solid red;width: 50px;height: 50px;"></div>
+    <input type="text" v-model="store">
+    <input type="button" v-bind:value="title" v-bind:class="{active:store>0}" value="加入购物车"></input>
 
     <!--watch的使用-->
     <input type="text" v-model="message">
 
     <!--计算属性-->
     <h2>当前日期为：{{birth}}</h2>
+
+    <!--组件间的通信，父传子注意v-bind可以简写成:bind,这里的num是父的属性值-->
+    <!--1. 父组件使用子组件时，自定义属性（属性名任意，属性值为要传递的数据）
+        2. 子组件通过props接收父组件数据，通过自定义属性的属性名-->
+    <!--子传父,子引用的是incr方法，而不是inc方法,自定义事件必须要写方法的括号-->
+    <!--vue提供了一个内置的this.$emit()函数，用来调用父组件绑定的函数-->
+    <counter :numx="num" :num1="num"></counter>
+    <counter  @incr="inc()"></counter>
 </div>
 </body>
 <script src="node_modules/vue/dist/vue.js"></script>
 <script>
+    Vue.component("counter",{
+       template:`
+         <button @click="subIncr">点我呀，点我加1. {{numx}}-{{num1}}</button>
+       `,
+        //props中可以接受复杂类型，并没有实际约束力
+        props:{
+           numx:{
+               type:Number,
+               required:true
+           },
+            num1:{
+
+            }
+           /*title:{
+               type: Number
+           }*/
+        },
+        methods:{
+            subIncr(){
+                this.$emit("incr")
+            }
+        }
+    });
     const app=new Vue({
         el:"#app",
         data:{
@@ -98,14 +135,15 @@
             show:true,
             random:0,
             message:'',
-            title:"",
-                birthday:1602788946642
+            title:"点我呀！",
+            birthday:1602788946642,
+            store:0
         },
         methods:{
             inc(){
                 this.num++;
-                console.log(this);
-                console.log(Date.now());//返回当前毫秒值
+                //console.log(this);
+                //console.log(Date.now());//返回当前毫秒值
             },
             print(){
                 console.log("您点击了，确认！！！");
